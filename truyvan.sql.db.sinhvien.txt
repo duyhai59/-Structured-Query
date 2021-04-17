@@ -1,0 +1,140 @@
+Danh sách những sinh viên có tuổi từ 21 đến 23
+Danh sách sinh viên sinh vào mùa xuân
+Cho biết thông tin về mức học bổng của các sinh viên. Trong đó, mức học bổng sẽ hiển thị là “Học bổng cao” nếu giá trị của học bổng lớn hơn 150,000 và ngược lại hiển thị là “Mức trung bình”
+Cho biết kết quả điểm thi của các sinh viên (Qua môn, trượt).
+Cho biết tổng số sinh viên, số sinh viên nam và số sinh viên nữ của mỗi khoa.
+Cho biết số lượng sinh viên theo từng tuổi [19-23]
+Cho biết số lượng sinh viên đậu và số lượng sinh viên rớt của từng môn trong lần thi 1.
+Cho biết danh sách sinh viên rớt 2 môn trở lên ở lần thi 1.
+Cho biết khoa nào có 2 sinh viên nam trở lên.
+Cho biết môn không có sinh viên rớt ở lần 1.
+Cho biết sinh viên có điểm trung bình lần 1 từ 7 trở lên và không rớt môn nào ở lần 1.
+Cho biết sinh viên đăng ký học hơn 3 môn mà thi lần 1 không bị rớt môn nào.
+Tìm những sinh viên nam 20 tuổi có học bổng mà quê quán không phải 1 trong các tỉnh Hà Nội, Đà Nẵng, Hải Phòng, Thái Bình.
+Tìm những sinh viên nữ thuộc khoa số 1 sinh vào mùa hè và có học bổng
+Tìm môn học có điểm trung bình trên 7 mà không có sinh viên trượt ở lần thi 1
+Tìm những sinh viên trượt 3 môn học trở lên
+Tìm những sinh viên học 5 môn trở lên mà điểm trung bình thi lần 1 trên 8
+Điểm thi cao nhất và thấp nhất môn học 1
+Tìm những sinh viên có điểm thi lần 2 cao hơn hoặc bằng điểm cao nhất trong lần thi 1
+Lấy thông tin sinh viên có học bổng cao nhất.
+Cho biết những sinh viên điểm thi lần 1 cao nhất môn học 1.
+Cho biết sinh viên có điểm thi lần 2 môn bất kỳ lớn hơn tất cả điểm thi lần 1 của những sinh viên khác.
+Cho biết sinh viên có nơi sinh cùng với Minh.
+Cho biết điểm thi cao nhất mỗi môn học.
+Cho biết sinh viên có học bổng cao nhất mỗi khoa
+Môn học nào có nhiều sinh viên học nhất.
+Khoa nào có đông sinh viên nam nhất.
+Cho biết môn nào có nhiều sinh viên rớt lần 1 nhiều nhất.
+Cho biết sinh viên chưa thi môn học 1
+Cho biết những môn không có sinh viên rớt ở lần 1.
+Cho biết những sinh viên không có học bổng hoặc bị rớt môn học trong lần thi 1
+Cho biết những sinh viên có học bổng hoặc không trượt môn nào trong lần thi 1
+Điểm cao nhất và thấp nhất mỗi môn học.
+Tìm những môn mà tất cả sinh viên trong danh sách sinh viên đều học
+Tìm những sinh viên học những môn giống sinh viên 1 (có thể nhiều hơn)
+Tìm những sinh viên học những môn bằng đúng sinh viên 1 (không hơn không kém môn nào)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+1.select Hoten, round(datediff(curdate(),Ngaysinh) / 365, 0) as tuổi from sinhvien having tuổi >=21 and tuổi <= 23
+2.select Hoten, month(Ngaysinh) as muaxuan from sinhvien having muaxuan < 4
+3.select Hoten, Hocbong,
+case 
+when Hocbong >= 150000 then 'học bổng cao'
+else 'học bổng trung bình'
+end as Hocbongtext
+from sinhvien 
+4.select Hoten,Diemthi,
+case 
+when Diemthi < 5 then 'trượt'
+else 'Qua môn' 
+end as Ketquatext 
+from sinhvien sv inner join ketqua kq on sv.SinhvienID = kq.SinhvienID 
+5.select KhoaID,
+sum(case when Gioitinh = N'nữ' then 1 else 0 end ) 'sinh vien nữ',
+sum(case when Gioitinh = N'nam' then 1 else 0 end ) 'sinh vien nam'
+from sinhvien group by KhoaID
+6.select 
+sum(case when year(now()) - year(ngaysinh) = 19 then 1 else 0 end ) '19 tuoi',
+sum(case when year(now()) - year(ngaysinh) = 20 then 1 else 0 end ) '20 tuoi',
+sum(case when year(now()) - year(ngaysinh) = 21 then 1 else 0 end ) '21 tuoi',
+sum(case when year(now()) - year(ngaysinh) = 22 then 1 else 0 end ) '22 tuoi',
+sum(case when year(now()) - year(ngaysinh) = 23 then 1 else 0 end ) '23 tuoi'
+from sinhvien 
+7.select MonhocID,
+sum(case when Diemthi < 4  then 1 else 0 end ) 'Rot',
+sum(case when Diemthi >=4  then 1 else 0 end ) 'Dau'
+from ketqua where Lanthi = 1 and MonhocID = 1
+select MonhocID,
+sum(case when Diemthi < 4  then 1 else 0 end ) 'Rot',
+sum(case when Diemthi >=4  then 1 else 0 end ) 'Dau'
+from ketqua where Lanthi = 1 and MonhocID = 2
+select MonhocID,
+sum(case when Diemthi < 4  then 1 else 0 end ) 'Rot',
+sum(case when Diemthi >=4  then 1 else 0 end ) 'Dau'
+from ketqua where Lanthi = 1 and MonhocID = 3
+select MonhocID,
+sum(case when Diemthi < 4  then 1 else 0 end ) 'Rot',
+sum(case when Diemthi >=4  then 1 else 0 end ) 'Dau'
+from ketqua where Lanthi = 1 and MonhocID = 4
+select MonhocID,
+sum(case when Diemthi < 4  then 1 else 0 end ) 'Rot',
+sum(case when Diemthi >=4  then 1 else 0 end ) 'Dau'
+from ketqua where Lanthi = 1 and MonhocID = 5
+select MonhocID,
+sum(case when Diemthi < 4  then 1 else 0 end ) 'Rot',
+sum(case when Diemthi >=4  then 1 else 0 end ) 'Dau'
+from ketqua where Lanthi = 1 and MonhocID = 6
+select MonhocID,
+sum(case when Diemthi < 4  then 1 else 0 end ) 'Rot',
+sum(case when Diemthi >=4  then 1 else 0 end ) 'Dau'
+from ketqua where Lanthi = 1 and MonhocID = 7
+select MonhocID,
+sum(case when Diemthi < 4  then 1 else 0 end ) 'Rot',
+sum(case when Diemthi >=4  then 1 else 0 end ) 'Dau'
+from ketqua where Lanthi = 1 and MonhocID = 8
+select MonhocID,
+sum(case when Diemthi < 4  then 1 else 0 end ) 'Rot',
+sum(case when Diemthi >=4  then 1 else 0 end ) 'Dau'
+from ketqua where Lanthi = 1 and MonhocID = 9
+select MonhocID,
+sum(case when Diemthi < 4  then 1 else 0 end ) 'Rot',
+sum(case when Diemthi >=4  then 1 else 0 end ) 'Dau'
+from ketqua where Lanthi = 1 and MonhocID = 10
+8.select SinhvienID ,count(MonhocID) from ketqua where Lanthi = 1 and Diemthi < 4 group by SinhvienID having count(MonhocID)>=2 
+9.select KhoaID,count(Gioitinh) 'số sv nam' from sinhvien where Gioitinh = 'nam' group by KhoaID having count(Gioitinh)>=2 
+10.select MonhocID from ketqua where Lanthi = 1 group by MonhocID having min(Diemthi) >= 4
+11.select SinhvienID,avg(Diemthi) from ketqua where Lanthi = 1 group by MonhocID having min(Diemthi) >= 4 and avg(Diemthi) > 7
+12.select SinhvienID from ketqua where Lanthi = 1 group by MonhocID having min(Diemthi) >= 4 and count(MonhocID) > 3
+13.select SinhvienID,Hoten from sinhvien where Noisinh not in ('Hà Nội','Đà Nẵng','Hải Phòng','Thái Bình') and year(now()) - year(ngaysinh) = 20
+14.select SinhvienID,Hoten from sinhvien where Gioitinh like 'nữ' and Hocbong > 0 and month(Ngaysinh) in (4,5,6)
+15.select MonhocID from ketqua where Lanthi = 1 group by MonhocID having avg(Diemthi) > 7 and min(Diemthi) > 4
+16.select SinhvienID,count(MonhocID) from ketqua where Diemthi < 4 group by SinhvienID having count(MonhocID) > 3
+17.select SinhvienID,count(MonhocID) from ketqua group by SinhvienID having count(MonhocID) > 5 and avg(Diemthi) >= 8
+18.select min(Diemthi),max(Diemthi) from ketqua where MonhocID = 1
+19.select * from ketqua where Lanthi = 2 and Diemthi >= any
+(
+select SinhvienID from ketqua where Lanthi =1
+)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+1.select * from sinhvien order by Hocbong desc limit 1
+2.select * from sinhvien where SinhvienID = (
+select SinhvienID from ketqua where Lanthi = 1 and MonhocID = 1 order by Diemthi desc limit 1 )
+3.select * from ketqua where Lanthi =2 and Diemthi > any(
+select Diemthi from ketqua where Lanthi = 1 )
+4.select * from sinhvien where Noisinh =
+(select Noisinh from sinhvien where SinhvienID = 4)
+5.select MonhocID,max(Diemthi) from ketqua group by MonhocID
+6.select SinhvienID,KhoaID,max(Hocbong) from sinhvien group by KhoaID
+7.select MonhocID,count(SinhvienID) from ketqua group by MonhocID order by count(SinhvienID) desc limit 1
+8.select KhoaID,count(SinhvienID) from sinhvien where Gioitinh = 'nam' group by khoaID order by count(SinhvienID) desc limit 1
+9.select MonhocID,count(SinhvienID) from ketqua where Lanthi = 1 and Diemthi < 5 group by MonhocID order by count(SinhvienID) desc limit 1
+10.select SinhvienID from ketqua where MonhocID = 1 and Diemthi is null
+11.select MonhocID from ketqua where Lanthi = 1 group by MonhocID having min(Diemthi) >= 4
+12.select SinhvienID from sinhvien where Hocbong = 0 or (select MonhocID from ketqua where Lanthi = 1 group by MonhocID having max(Diemthi) <=4)
+13.select SinhvienID from sinhvien where Hocbong > 0 or (select MonhocID from ketqua where Lanthi = 1 group by MonhocID having min(Diemthi) >=4)
+14.select MonhocID,min(Diemthi) 'diem thap nhat',max(Diemthi) 'điểm cao nhất' from ketqua group by MonhocID
+15.select MonhocID,count(SinhvienID) from ketqua group by MonhocID having count(SinhvienID) = 15
+16.select SinhvienID from ketqua where MonhocID >=
+(select SinhvienID from sinhvien where SinhvienID = 1) group by SinhvienID
+17.select SinhvienID from ketqua where MonhocID =
+(select SinhvienID from sinhvien where SinhvienID = 1) group by SinhvienID
